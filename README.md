@@ -172,7 +172,12 @@ Add shared dependencies to the parent POM's `<dependencyManagement>` section, th
 
 ### Accessing Kafka CLI
 ```bash
+# Access Kafka CLI inside Docker container
 docker exec -it -w /opt/kafka/bin broker sh
+
+# Create Topics
 ./kafka-topics.sh --create --topic logs --bootstrap-server broker:29092
+
+# List Topics
 ./kafka-topics.sh --list --bootstrap-server localhost:9092
 ```
