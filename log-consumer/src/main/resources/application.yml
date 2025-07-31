@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: log-consumer
+  kafka:
+    bootstrap-servers: localhost:9092
+    streams:
+      application-id: log-consumer-app
