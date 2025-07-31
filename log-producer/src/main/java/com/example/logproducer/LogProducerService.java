@@ -1,7 +1,11 @@
 package com.example.logproducer;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Random;
 
 @Service
 public class LogProducerService {
@@ -15,7 +19,7 @@ public class LogProducerService {
     public void sendLog(String level, String message) {
         String log = String.format("{\"level\":\"%s\", \"message\":\"%s\"}", level, message);
         kafkaTemplate
-                .send(topic, log)
+                .send(topic, level, log)
                 .toCompletableFuture()
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
@@ -25,4 +29,24 @@ public class LogProducerService {
                     }
                 });
     }
+
+    @PostConstruct
+    public void generateRandomLogs() {
+        new Thread(() -> {
+            // "DEBUG", "WARN",
+            String[] levels = {"INFO", "DEBUG", "ERROR"};
+            Random random = new Random();
+            while (true) {
+                String level = levels[random.nextInt(levels.length)];
+                String message = level + " message at " + Instant.now();
+                sendLog(level, message);
+                try {
+                    Thread.sleep(500 + random.nextInt(2500)); // 0.5 to 3 seconds
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }).start();
+    }
+
 }
