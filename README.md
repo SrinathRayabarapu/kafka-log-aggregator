@@ -169,3 +169,10 @@ Add shared dependencies to the parent POM's `<dependencyManagement>` section, th
 - Application logs: Check console output
 - Kafka logs: `docker compose logs kafka`
 - Zookeeper logs: `docker compose logs zookeeper`
+
+### Accessing Kafka CLI
+```bash
+docker exec -it -w /opt/kafka/bin broker sh
+./kafka-topics.sh --create --topic logs --bootstrap-server broker:29092
+./kafka-topics.sh --list --bootstrap-server localhost:9092
+```
