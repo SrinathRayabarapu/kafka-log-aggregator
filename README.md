@@ -180,4 +180,18 @@ docker exec -it -w /opt/kafka/bin broker sh
 
 # List Topics
 ./kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# Prometheus
+http://localhost:9090
+
+# Grafana
+http://localhost:3000/login
+
+# kafka UI
+http://localhost:8085/
 ```
+
+### Roadmap of this Application
+- Initial release with basic log producer and consumer functionality
+- Add advanced filtering and processing capabilities in consumer
+- Implement monitoring and alerting for log processing via Prometheus and Grafana

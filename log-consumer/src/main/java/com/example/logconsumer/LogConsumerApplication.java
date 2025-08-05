@@ -1,8 +1,10 @@
 package com.example.logconsumer;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.TimeWindows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,9 @@ public class LogConsumerApplication {
     public static void main(String[] args) {
         SpringApplication.run(LogConsumerApplication.class, args);
     }
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     @Bean
     public KStream<String, String> kStream(StreamsBuilder builder) {
@@ -34,6 +39,7 @@ public class LogConsumerApplication {
                 .toStream()
                 .filter((windowedKey, count) -> count >= 5)
                 .foreach((windowedKey, count) -> {
+                    meterRegistry.counter("log.error.count", "level", windowedKey.key()).increment(count);
                     System.out.printf("THRESHOLD ALERT: %s had %d errors between %s and %s%n",
                             windowedKey.key(), count,
                             Instant.ofEpochMilli(windowedKey.window().start()),

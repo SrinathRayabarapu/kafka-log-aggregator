@@ -9,6 +9,7 @@ import java.util.Random;
 
 @Service
 public class LogProducerService {
+
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final String topic = "logs";
 
