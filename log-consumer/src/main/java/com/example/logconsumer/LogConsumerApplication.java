@@ -39,7 +39,7 @@ public class LogConsumerApplication {
                 .toStream()
                 .filter((windowedKey, count) -> count >= 5)
                 .foreach((windowedKey, count) -> {
-                    meterRegistry.counter("log.error.count", "level", windowedKey.key()).increment(count);
+                    meterRegistry.counter("log_error_count", "level", windowedKey.key()).increment(count);
                     System.out.printf("THRESHOLD ALERT: %s had %d errors between %s and %s%n",
                             windowedKey.key(), count,
                             Instant.ofEpochMilli(windowedKey.window().start()),
